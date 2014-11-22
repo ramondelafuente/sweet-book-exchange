@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "8c2aa4172fedebb6d86557ba101ebe83",
+    "hash": "00f95408135ee9336cd66eb827f493e0",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -628,6 +628,53 @@
                 "parser"
             ],
             "time": "2013-01-12 18:59:04"
+        },
+        {
+            "name": "fale/isbn",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Fale/isbn.git",
+                "reference": "5b597e8c14557ac29eadf1f846f75c2eedb19c7e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Fale/isbn/zipball/5b597e8c14557ac29eadf1f846f75c2eedb19c7e",
+                "reference": "5b597e8c14557ac29eadf1f846f75c2eedb19c7e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Isbn": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Fabio Alessandro Locati",
+                    "email": "fabiolocati@gmail.com",
+                    "homepage": "http://fabiolocati.com",
+                    "role": "lead"
+                }
+            ],
+            "description": "ISBN library",
+            "homepage": "http://github.com/fale/isbn",
+            "keywords": [
+                "ISBN",
+                "ISBN-10",
+                "ISBN-13"
+            ],
+            "time": "2014-03-02 14:44:37"
         },
         {
             "name": "igorw/config-service-provider",
