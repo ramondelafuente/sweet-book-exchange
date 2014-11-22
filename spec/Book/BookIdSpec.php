@@ -1,10 +1,10 @@
 <?php
 
-namespace Spec\SWP\Exchange\Library;
+namespace Spec\SWP\Exchange\Book;
 
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use SWP\Exchange\Library\BookId;
+use SWP\Exchange\Book\BookId;
 
 class BookIdSpec extends ObjectBehavior
 {
@@ -15,7 +15,7 @@ class BookIdSpec extends ObjectBehavior
 
     function it_is_created_from_a_string()
     {
-        $this->shouldHaveType('SWP\Exchange\Library\BookId');
+        $this->shouldHaveType('SWP\Exchange\Book\BookId');
         $this->shouldImplement('SWP\Exchange\Core\Identifier');
     }
 
@@ -28,7 +28,7 @@ class BookIdSpec extends ObjectBehavior
     {
         $this->beConstructedThrough('generate', []);
 
-        $this->shouldHaveType('SWP\Exchange\Library\BookId');
+        $this->shouldHaveType('SWP\Exchange\Book\BookId');
         $this->shouldImplement('SWP\Exchange\Core\Identifier');
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace SWP\Exchange\Library;
+namespace SWP\Exchange\Book;
 
 use SWP\Exchange\Core\AbstractIdentifier;
 
