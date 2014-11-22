@@ -1,10 +1,8 @@
 <?php
 
-namespace SWP\Exchange\Book;
+namespace SWP\Exchange\Core;
 
-use Rhumsaa\Uuid\Uuid;
-
-class BookId
+abstract class AbstractIdentifier implements Identifier
 {
     /**
      * @var string
@@ -13,30 +11,28 @@ class BookId
 
     /**
      * @param string $string
-     * @return BookId
+     * @return Identifier
      */
     public static function fromString($string)
     {
-        return new BookId($string);
+        return new static($string);
     }
 
     /**
-     * @return BookId
+     * @return Identifier
      */
     public static function generate()
     {
-        return new BookId(
-            Uuid::uuid4()->toString()
-        );
+        return new static(IdentifierGenerator::generate());
     }
 
     /**
-     * @param object $other
+     * @param Identifier $other
      * @return bool
      */
-    public function equals($other)
+    public function equals(Identifier $other)
     {
-        return ($other instanceof self && $other->id === $this->id);
+        return ($other instanceof static && $other->id === $this->id);
     }
 
     /**
