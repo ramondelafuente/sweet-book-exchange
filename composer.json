@@ -1,6 +1,14 @@
 {
+    "name": "sweetlakephp/sweet-book-exchange",
+    "description": "Sweet Book Exchange",
+    "license": "MIT",
+    "authors": [
+        { "name": "Ramon de la Fuente", "email": "ramon@future500.nl" },
+        { "name": "Jasper N. Brouwer", "email": "jasper@future500.nl" }
+    ],
+
     "require": {
-        "broadway/broadway": "~0.2.0",
+        "broadway/broadway": "~0.2",
         "silex/silex": "~1.2",
         "igorw/config-service-provider": "~1.2",
         "twig/twig": "~1.8",
@@ -9,7 +17,14 @@
         "doctrine/dbal": "~2.4",
         "symfony/yaml": "~2.5"
     },
+
     "require-dev": {
-        "phpspec/phpspec": "~2.0"
+        "phpspec/phpspec": "~2.1@dev"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "SWP\\Exchange\\": "src/"
+        }
     }
 }

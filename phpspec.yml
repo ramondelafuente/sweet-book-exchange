@@ -1,0 +1,5 @@
+suites:
+  swp_exchange_suite:
+    namespace: SWP\Exchange
+    spec_prefix: Spec
+    psr4_prefix: SWP\Exchange
