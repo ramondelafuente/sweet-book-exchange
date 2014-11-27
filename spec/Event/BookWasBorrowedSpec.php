@@ -7,7 +7,7 @@ use Prophecy\Argument;
 use SWP\Exchange\Book\BookId;
 use SWP\Exchange\Person\PersonId;
 
-class BookWasCheckedOutSpec extends ObjectBehavior
+class BookWasBorrowedSpec extends ObjectBehavior
 {
     function let()
     {
@@ -16,7 +16,7 @@ class BookWasCheckedOutSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('SWP\Exchange\Event\BookWasCheckedOut');
+        $this->shouldHaveType('SWP\Exchange\Event\BookWasBorrowed');
     }
 
     function it_has_the_right_borrowerid()

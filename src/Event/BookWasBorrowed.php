@@ -5,7 +5,7 @@ namespace SWP\Exchange\Event;
 use SWP\Exchange\Book\BookId;
 use SWP\Exchange\Person\PersonId;
 
-class BookWasCheckedOut
+class BookWasBorrowed
 {
     /** @var PersonId  */
     private $borrowerId;
