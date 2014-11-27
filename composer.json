@@ -8,7 +8,7 @@
     ],
 
     "require": {
-        "broadway/broadway": "~0.2",
+        "broadway/broadway": "~0.3",
         "silex/silex": "~1.2",
         "igorw/config-service-provider": "~1.2",
         "twig/twig": "~1.8",
