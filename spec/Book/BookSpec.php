@@ -96,7 +96,7 @@ class BookSpec extends ObjectBehavior
         $eventTypeList = [];
 
         $borrowerId = PersonId::fromString('4');
-        $this->borrow($borrowerId);
+        $this->shouldThrow('\SWP\Exchange\Exception\BorrowedBookManipulation')->during('borrow', array($borrowerId));
 
         $events = $this->getUncommittedEvents();
         $events->getIterator()->shouldHaveCount(count($eventTypeList));

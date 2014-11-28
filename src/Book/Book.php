@@ -3,7 +3,9 @@
 namespace SWP\Exchange\Book;
 
 use Broadway\EventSourcing\EventSourcedAggregateRoot;
+use SWP\Exchange\Exception\BookException;
 use SWP\Exchange\Exception\DiscardedBookManipulation;
+use SWP\Exchange\Exception\BorrowedBookManipulation;
 use SWP\Exchange\Event\BookWasAdded;
 use SWP\Exchange\Event\BookWasBorrowed;
 use SWP\Exchange\Event\BookWasDiscarded;
@@ -51,13 +53,21 @@ class Book extends EventSourcedAggregateRoot
         $this->apply(new BookWasDiscarded($this->aggregateRootId));
     }
 
+    /**
+     * @param PersonId $borrower
+     */
     public function borrow(PersonId $borrower)
     {
         $this->guardItIsNotDiscarded(__FUNCTION__);
+        $this->guardItIsNotBeingBorrowedByTheOwner($borrower);
 
-        if (!$this->owner->equals($this->keeper)) {
+        // The borrower already has the book.
+        if ($this->keeper->equals($borrower)) {
             return;
         }
+
+        $this->guardItIsNotBorrowed(__FUNCTION__);
+
         $this->apply(new BookWasBorrowed($borrower, $this->aggregateRootId));
     }
 
@@ -65,9 +75,11 @@ class Book extends EventSourcedAggregateRoot
     {
         $this->guardItIsNotDiscarded(__FUNCTION__);
 
-        if ($this->owner->equals($this->keeper)) {
+        // The owner already has the book.
+        if (!$this->isItBorrowed()) {
             return;
         }
+
         $this->apply(new BookWasReturned($this->aggregateRootId));
     }
 
@@ -141,5 +153,16 @@ class Book extends EventSourcedAggregateRoot
         }
     }
 
+    /**
+     * @param PersonId $borrower
+     *
+     * @throws BookException
+     */
+    protected function guardItIsNotBeingBorrowedByTheOwner(PersonId $borrower)
+    {
+        if ($this->owner->equals($borrower)) {
+            throw BookException::make($this, 'borrow by the owner');
+        }
+    }
 
 }
