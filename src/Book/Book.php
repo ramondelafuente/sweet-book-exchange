@@ -3,6 +3,7 @@
 namespace SWP\Exchange\Book;
 
 use Broadway\EventSourcing\EventSourcedAggregateRoot;
+use SWP\Exchange\Exception\DiscardedBookManipulation;
 use SWP\Exchange\Event\BookWasAdded;
 use SWP\Exchange\Event\BookWasBorrowed;
 use SWP\Exchange\Event\BookWasDiscarded;
@@ -44,15 +45,17 @@ class Book extends EventSourcedAggregateRoot
 
     public function discard()
     {
-        if (!$this->owner->equals($this->keeper) || $this->discarded) {
-            return;
-        }
+        $this->guardItIsNotDiscarded(__FUNCTION__);
+        $this->guardItIsNotBorrowed(__FUNCTION__);
+
         $this->apply(new BookWasDiscarded($this->aggregateRootId));
     }
 
     public function borrow(PersonId $borrower)
     {
-        if (!$this->owner->equals($this->keeper) || $this->discarded) {
+        $this->guardItIsNotDiscarded(__FUNCTION__);
+
+        if (!$this->owner->equals($this->keeper)) {
             return;
         }
         $this->apply(new BookWasBorrowed($borrower, $this->aggregateRootId));
@@ -60,10 +63,20 @@ class Book extends EventSourcedAggregateRoot
 
     public function giveBack()
     {
-        if ($this->owner->equals($this->keeper) || $this->discarded) {
+        $this->guardItIsNotDiscarded(__FUNCTION__);
+
+        if ($this->owner->equals($this->keeper)) {
             return;
         }
         $this->apply(new BookWasReturned($this->aggregateRootId));
+    }
+
+    /**
+     * @return bool
+     */
+    public function isItBorrowed()
+    {
+        return !$this->owner->equals($this->keeper);
     }
 
     /**
@@ -103,9 +116,30 @@ class Book extends EventSourcedAggregateRoot
     /**
      * @param BookWasReturned $event
      */
-    public function applyBookWasReturned(BookWasReturned $event)
+    public function applyBookWasGivenBack(BookWasReturned $event)
     {
         $this->keeper = $this->owner;
     }
+
+    /**
+     * @throws DiscardedBookManipulation
+     */
+    protected function guardItIsNotDiscarded($manipulation)
+    {
+        if ($this->discarded) {
+            throw DiscardedBookManipulation::make($this, $manipulation);
+        }
+    }
+
+    /**
+     * @throws BorrowedBookManipulation
+     */
+    protected function guardItIsNotBorrowed($manipulation)
+    {
+        if ($this->isItBorrowed()) {
+            throw BorrowedBookManipulation::make($this, $manipulation);
+        }
+    }
+
 
 }

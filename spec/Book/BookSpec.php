@@ -8,6 +8,7 @@ use SWP\Exchange\Book\Book;
 use SWP\Exchange\Book\BookId;
 use SWP\Exchange\Book\ISBN;
 use SWP\Exchange\Event\BookWasAdded;
+use SWP\Exchange\Exception\DiscardedBookManipulation;
 use SWP\Exchange\Person\PersonId;
 
 class BookSpec extends ObjectBehavior
@@ -49,7 +50,7 @@ class BookSpec extends ObjectBehavior
         $events->getIterator()->shouldContainEventTypes($eventTypeList);
     }
 
-    function it_is_checked_out()
+    function it_is_borrowed()
     {
         $this->getUncommittedEvents();
 
@@ -60,12 +61,14 @@ class BookSpec extends ObjectBehavior
         $borrowerId = PersonId::fromString('10');
         $this->borrow($borrowerId);
 
+        $this->isItBorrowed()->shouldReturn(true);
+
         $events = $this->getUncommittedEvents();
         $events->getIterator()->shouldHaveCount(count($eventTypeList));
         $events->getIterator()->shouldContainEventTypes($eventTypeList);
     }
 
-    function it_is_returned()
+    function it_is_given_back()
     {
         $this->getUncommittedEvents();
 
@@ -84,7 +87,7 @@ class BookSpec extends ObjectBehavior
     }
 
 
-    function it_is_not_checked_out_if_the_keeper_is_not_the_owner()
+    function it_is_not_borrowed_if_the_keeper_is_not_the_owner()
     {
         $borrowerId = PersonId::fromString('3');
         $this->borrow($borrowerId);
@@ -121,9 +124,9 @@ class BookSpec extends ObjectBehavior
         ];
 
         $borrowerId = PersonId::fromString('1');
-        $this->borrow($borrowerId);
-        $this->giveBack();
-        $this->discard();
+        $this->shouldThrow('\SWP\Exchange\Exception\DiscardedBookManipulation')->during('borrow', array($borrowerId));
+        $this->shouldThrow('\SWP\Exchange\Exception\DiscardedBookManipulation')->during('giveBack');
+        $this->shouldThrow('\SWP\Exchange\Exception\DiscardedBookManipulation')->during('discard');
 
         $events = $this->getUncommittedEvents();
         $events->getIterator()->shouldHaveCount(count($eventTypeList));
