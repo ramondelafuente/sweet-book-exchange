@@ -4,7 +4,7 @@ namespace SWP\Exchange\Exception;
 
 use SWP\Exchange\Book\Book;
 
-class BookException extends \LogicException
+class BookException extends \LogicException implements Exception
 {
     static protected $template = 'Invalid action %s on book with ID %s';
 
