@@ -5,7 +5,7 @@ namespace Spec\SWP\Exchange\Command;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 
-class CheckBookOutSpec extends ObjectBehavior
+class BorrowBookSpec extends ObjectBehavior
 {
     function let()
     {
@@ -14,7 +14,7 @@ class CheckBookOutSpec extends ObjectBehavior
 
     function it_is_initializable()
     {
-        $this->shouldHaveType('SWP\Exchange\Command\CheckBookOut');
+        $this->shouldHaveType('SWP\Exchange\Command\BorrowBook');
         $this->shouldImplement('SWP\Exchange\Core\Command');
     }
 

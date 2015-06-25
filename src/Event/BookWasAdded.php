@@ -2,11 +2,13 @@
 
 namespace SWP\Exchange\Event;
 
+use SimpleES\EventSourcing\Identifier\Identifies;
 use SWP\Exchange\Book\BookId;
 use SWP\Exchange\Book\ISBN;
+use SWP\Exchange\Core\Event;
 use SWP\Exchange\Person\PersonId;
 
-final class BookWasAdded
+final class BookWasAdded implements Event
 {
     /** @var PersonId */
     private $ownerId;
@@ -48,4 +50,11 @@ final class BookWasAdded
         return $this->ownerId;
     }
 
+    /**
+     * @return Identifies
+     */
+    public function aggregateId()
+    {
+        return $this->bookId;
+    }
 }

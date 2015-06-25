@@ -1,0 +1,6 @@
+SWP\Exchange\Event\BookWasReturned:
+  properties:
+    bookId:
+      type: SWP\Exchange\Book\BookId
+    isbn:
+      type: SWP\Exchange\Book\ISBN

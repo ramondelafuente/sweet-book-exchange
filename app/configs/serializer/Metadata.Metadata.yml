@@ -1,0 +1,5 @@
+SimpleES\EventSourcing\Metadata\Metadata:
+  properties:
+    data:
+      type: array
+

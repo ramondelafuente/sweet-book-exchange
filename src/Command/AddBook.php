@@ -2,9 +2,10 @@
 
 namespace SWP\Exchange\Command;
 
+use SimpleBus\Message\Message;
 use SWP\Exchange\Core\Command;
 
-class AddBook implements Command
+class AddBook implements Command, Message
 {
     /**
      * @var string

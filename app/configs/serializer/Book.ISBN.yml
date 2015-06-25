@@ -1,0 +1,4 @@
+SWP\Exchange\Book\ISBN:
+  properties:
+    isbn:
+      type: string

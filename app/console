@@ -4,6 +4,7 @@
 set_time_limit(0);
 
 $app = require_once __DIR__ ."/bootstrap.php";
+$app['debug'] = true;
 
 $console = &$app["console"];
 $console->run();

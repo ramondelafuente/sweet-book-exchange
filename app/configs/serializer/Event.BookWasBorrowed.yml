@@ -1,0 +1,8 @@
+SWP\Exchange\Event\BookWasBorrowed:
+  properties:
+    bookId:
+      type: SWP\Exchange\Book\BookId
+    isbn:
+      type: SWP\Exchange\Book\ISBN
+    borrowerId:
+      type: SWP\Exchange\Person\PersonId

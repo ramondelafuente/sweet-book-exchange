@@ -24,38 +24,38 @@ class BookSpec extends ObjectBehavior
     function it_is_added()
     {
         $eventTypeList = [
-            'SWP.Exchange.Event.BookWasAdded',
+            'SWP\Exchange\Event\BookWasAdded',
         ];
 
         $this->shouldHaveType('SWP\Exchange\Book\Book');
-        $this->getAggregateRootId()->shouldBeLike(BookId::fromString('2'));
+        $this->aggregateId()->shouldBeLike(BookId::fromString('2'));
 
-        $events = $this->getUncommittedEvents();
-        $events->getIterator()->shouldHaveCount(count($eventTypeList));
-        $events->getIterator()->shouldContainEventTypes($eventTypeList);
+        $events = $this->recordedEvents();
+        $events->shouldHaveCount(count($eventTypeList));
+        $events->shouldContainEventTypes($eventTypeList);
     }
 
     function it_is_discarded()
     {
-        $this->getUncommittedEvents();
+        $this->clearRecordedEvents();
 
         $eventTypeList = [
-            'SWP.Exchange.Event.BookWasDiscarded',
+            'SWP\Exchange\Event\BookWasDiscarded',
         ];
 
         $this->discard();
 
-        $events = $this->getUncommittedEvents();
-        $events->getIterator()->shouldHaveCount(count($eventTypeList));
-        $events->getIterator()->shouldContainEventTypes($eventTypeList);
+        $events = $this->recordedEvents();
+        $events->shouldHaveCount(count($eventTypeList));
+        $events->shouldContainEventTypes($eventTypeList);
     }
 
     function it_is_borrowed()
     {
-        $this->getUncommittedEvents();
+        $this->clearRecordedEvents();
 
         $eventTypeList = [
-            'SWP.Exchange.Event.BookWasBorrowed',
+            'SWP\Exchange\Event\BookWasBorrowed',
         ];
 
         $borrowerId = PersonId::fromString('10');
@@ -63,27 +63,29 @@ class BookSpec extends ObjectBehavior
 
         $this->isItBorrowed()->shouldReturn(true);
 
-        $events = $this->getUncommittedEvents();
-        $events->getIterator()->shouldHaveCount(count($eventTypeList));
-        $events->getIterator()->shouldContainEventTypes($eventTypeList);
+        $events = $this->recordedEvents();
+        $events->shouldHaveCount(count($eventTypeList));
+        $events->shouldContainEventTypes($eventTypeList);
     }
 
     function it_is_given_back()
     {
-        $this->getUncommittedEvents();
+        $this->clearRecordedEvents();
 
         $eventTypeList = [
-            'SWP.Exchange.Event.BookWasBorrowed',
-            'SWP.Exchange.Event.BookWasReturned',
+            'SWP\Exchange\Event\BookWasBorrowed',
+            'SWP\Exchange\Event\BookWasReturned',
         ];
 
         $borrowerId = PersonId::fromString('10');
         $this->borrow($borrowerId);
         $this->giveback();
 
-        $events = $this->getUncommittedEvents();
-        $events->getIterator()->shouldHaveCount(count($eventTypeList));
-        $events->getIterator()->shouldContainEventTypes($eventTypeList);
+        $this->isItBorrowed()->shouldReturn(false);
+
+        $events = $this->recordedEvents();
+        $events->shouldHaveCount(count($eventTypeList));
+        $events->shouldContainEventTypes($eventTypeList);
     }
 
 
@@ -91,53 +93,45 @@ class BookSpec extends ObjectBehavior
     {
         $borrowerId = PersonId::fromString('3');
         $this->borrow($borrowerId);
-        $this->getUncommittedEvents();
-
-        $eventTypeList = [];
+        $this->clearRecordedEvents();
 
         $borrowerId = PersonId::fromString('4');
-        $this->shouldThrow('\SWP\Exchange\Exception\BorrowedBookManipulation')->during('borrow', array($borrowerId));
-
-        $events = $this->getUncommittedEvents();
-        $events->getIterator()->shouldHaveCount(count($eventTypeList));
+        $this->shouldThrow('SWP\Exchange\Exception\BorrowedBookManipulation')->during('borrow', array($borrowerId));
     }
 
     function it_is_not_returned_if_the_keeper_is_the_owner()
     {
-        $this->getUncommittedEvents();
+        $this->clearRecordedEvents();
 
-        $eventTypeList = [];
-
-        $this->giveBack();
-
-        $events = $this->getUncommittedEvents();
-        $events->getIterator()->shouldHaveCount(count($eventTypeList));
+        $this->shouldThrow('SWP\Exchange\Exception\BookException')->during('giveBack');
     }
 
     function it_does_nothing_if_the_book_was_discarded()
     {
-        $this->getUncommittedEvents();
+        $this->clearRecordedEvents();
         $this->discard();
 
         $eventTypeList = [
-            'SWP.Exchange.Event.BookWasDiscarded',
+            'SWP\Exchange\Event\BookWasDiscarded',
         ];
 
         $borrowerId = PersonId::fromString('1');
-        $this->shouldThrow('\SWP\Exchange\Exception\DiscardedBookManipulation')->during('borrow', array($borrowerId));
-        $this->shouldThrow('\SWP\Exchange\Exception\DiscardedBookManipulation')->during('giveBack');
-        $this->shouldThrow('\SWP\Exchange\Exception\DiscardedBookManipulation')->during('discard');
+        $this->shouldThrow('SWP\Exchange\Exception\DiscardedBookManipulation')->during('borrow', array($borrowerId));
+        $this->shouldThrow('SWP\Exchange\Exception\DiscardedBookManipulation')->during('giveBack');
+        $this->shouldThrow('SWP\Exchange\Exception\DiscardedBookManipulation')->during('discard');
 
-        $events = $this->getUncommittedEvents();
-        $events->getIterator()->shouldHaveCount(count($eventTypeList));
+        $events = $this->recordedEvents();
+        $events->shouldHaveCount(count($eventTypeList));
+        $events->shouldContainEventTypes($eventTypeList);
     }
 
     public function getMatchers()
     {
         return [
             'containEventTypes' => function ($subject, $types) {
-                foreach ($subject as $domainMessage) {
-                    $key = array_search($domainMessage->getType(), $types);
+
+                foreach ($subject as $domainEvent) {
+                    $key = array_search(get_class($domainEvent), $types);
                     if ($key !== false) {
                         unset($types[$key]);
                     }

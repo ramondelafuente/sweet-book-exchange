@@ -2,21 +2,17 @@
 
 namespace SWP\Exchange\Core;
 
+use JMS\Serializer\Annotation as JMS;
+
+use SimpleES\EventSourcing\Identifier\Identifies;
+
 abstract class AbstractIdentifier implements Identifier
 {
     /**
+     * @JMS\Type("string")
      * @var string
      */
     private $id;
-
-    /**
-     * @param string $string
-     * @return Identifier
-     */
-    public static function fromString($string)
-    {
-        return new static($string);
-    }
 
     /**
      * @return Identifier
@@ -27,12 +23,12 @@ abstract class AbstractIdentifier implements Identifier
     }
 
     /**
-     * @param Identifier $other
-     * @return bool
+     * @param string $string
+     * @return static
      */
-    public function equals(Identifier $other)
+    public static function fromString($string)
     {
-        return ($other instanceof static && $other->id === $this->id);
+        return new static($string);
     }
 
     /**
@@ -44,10 +40,20 @@ abstract class AbstractIdentifier implements Identifier
     }
 
     /**
+     * @param Identifies $other
+     * @return bool
+     */
+    public function equals(Identifies $other)
+    {
+        return ($other instanceof static && $other->id === $this->id);
+    }
+
+    /**
      * @param string $id
      */
     private function __construct($id)
     {
-        $this->id = (string)$id;
+        $this->id = (string) $id;
     }
+
 }

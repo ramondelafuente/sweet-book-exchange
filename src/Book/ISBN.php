@@ -2,6 +2,9 @@
 
 namespace SWP\Exchange\Book;
 
+use \Isbn as FaleIsbn;
+use SWP\Exchange\Exception\BookException;
+
 class ISBN
 {
     /**
@@ -38,6 +41,10 @@ class ISBN
 
     private function guardValidISBN($isbn)
     {
+        $faleIsbn = new FaleIsbn\Isbn();
 
+        if (!$faleIsbn->check->identify($isbn)) {
+            throw new \InvalidArgumentException('Invalid ISBN detected: ' . $isbn);
+        };
     }
 }

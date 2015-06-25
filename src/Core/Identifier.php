@@ -2,27 +2,8 @@
 
 namespace SWP\Exchange\Core;
 
-interface Identifier
+use SimpleES\EventSourcing\Identifier\Identifies;
+
+interface Identifier extends Identifies
 {
-    /**
-     * @param string $string
-     * @return Identifier
-     */
-    public static function fromString($string);
-
-    /**
-     * @return Identifier
-     */
-    public static function generate();
-
-    /**
-     * @param Identifier $other
-     * @return bool
-     */
-    public function equals(Identifier $other);
-
-    /**
-     * @return string
-     */
-    public function __toString();
 }

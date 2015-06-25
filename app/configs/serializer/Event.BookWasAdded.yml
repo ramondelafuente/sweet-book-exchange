@@ -1,0 +1,8 @@
+SWP\Exchange\Event\BookWasAdded:
+  properties:
+    ownerId:
+      type: SWP\Exchange\Person\PersonId
+    isbn:
+      type: SWP\Exchange\Book\ISBN
+    bookId:
+      type: SWP\Exchange\Book\BookId
